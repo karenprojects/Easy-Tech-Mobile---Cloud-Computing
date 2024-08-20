@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar, DateData } from 'react-native-calendars';
 
 const Telemedicina: React.FC<any> = ({ navigation }) => {
+  const [especialista, setEspecialista] = useState('');
   const [selectedDate, setSelectedDate] = useState<DateData | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
@@ -15,18 +16,25 @@ const Telemedicina: React.FC<any> = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    if (selectedDate && selectedTime) {
-      // Lógica para confirmar agendamento
-      alert(`Agendado para ${selectedDate.dateString} às ${selectedTime}`);
+    if (especialista && selectedDate && selectedTime) {
+      alert(`Consulta agendada com ${especialista} no dia ${selectedDate.dateString} às ${selectedTime}.
+                O link para a consulta será enviado por e-mail. Por favor, verifique sua caixa de entrada para mais detalhes.`);
     } else {
-      alert('Por favor, selecione a data e a hora.');
+      alert('Por favor, preencha todos os campos, selecione uma data e um horário.');
     }
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Telemedicina</Text>
       
+      <TextInput
+        style={styles.input}
+        placeholder="Especialista"
+        value={especialista}
+        onChangeText={setEspecialista}
+      />
+
       <Text style={styles.subtitle}>Selecione uma Data:</Text>
       <Calendar
         onDayPress={handleDateSelect}
@@ -39,23 +47,18 @@ const Telemedicina: React.FC<any> = ({ navigation }) => {
           monthTextColor: '#333',
           textSectionTitleColor: '#333',
         }}
+        style={styles.calendar}
       />
 
-      <Text style={styles.subtitle}>Selecione uma Hora:</Text>
+      <Text style={styles.subtitle}>Selecione um Horário:</Text>
       <View style={styles.timeContainer}>
-        {['09:00', '10:00', '11:00', '14:00', '15:00', '16:00'].map((time) => (
+        {['09:00', '10:00', '11:00', '14:00', '15:00', '16:00'].map(time => (
           <TouchableOpacity
             key={time}
-            style={[
-              styles.timeButton,
-              selectedTime === time && styles.timeButtonSelected
-            ]}
+            style={[styles.timeButton, selectedTime === time && styles.timeButtonSelected]}
             onPress={() => handleTimeSelect(time)}
           >
-            <Text style={[
-              styles.timeButtonText,
-              selectedTime === time && styles.timeButtonTextSelected
-            ]}>
+            <Text style={[styles.timeButtonText, selectedTime === time && styles.timeButtonTextSelected]}>
               {time}
             </Text>
           </TouchableOpacity>
@@ -69,13 +72,13 @@ const Telemedicina: React.FC<any> = ({ navigation }) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>Voltar</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
@@ -87,49 +90,30 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
   },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginVertical: 10,
-    color: '#333',
-  },
-  timeContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  timeButton: {
-    backgroundColor: '#007bff',
-    padding: 12,
+  input: {
+    height: 40,
+    borderColor: '#ddd',
+    borderWidth: 1,
     borderRadius: 8,
-    margin: 5,
-    width: '25%',
-    alignItems: 'center',
+    marginBottom: 10,
+    width: '100%',
+    maxWidth: 400,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
   },
-  timeButtonSelected: {
-    backgroundColor: '#0056b3',
-  },
-  timeButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  timeButtonTextSelected: {
-    color: '#e0e0e0',
+  calendar: {
+    width: '100%',
+    maxWidth: 400,
+    marginVertical: 20,
   },
   submitButton: {
     backgroundColor: '#28a745',
     padding: 16,
     borderRadius: 8,
     marginTop: 20,
-    width: '80%',
+    width: '100%',
+    maxWidth: 400,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
   },
   submitButtonText: {
     color: '#fff',
@@ -141,18 +125,45 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginTop: 10,
-    width: '80%',
+    width: '100%',
+    maxWidth: 400,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
   },
   backButtonText: {
     color: '#333',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginVertical: 10,
+    color: '#333',
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  timeButton: {
+    backgroundColor: '#007bff',
+    padding: 12,
+    borderRadius: 8,
+    margin: 5,
+    width: 80,
+    alignItems: 'center',
+  },
+  timeButtonSelected: {
+    backgroundColor: '#0056b3',
+  },
+  timeButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  timeButtonTextSelected: {
+    color: '#e0e0e0',
   },
 });
 
