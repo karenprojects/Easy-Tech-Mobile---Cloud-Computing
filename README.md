@@ -4,7 +4,7 @@ Descrição;
 Este aplicativo é projetado para permitir que usuários agendem consultas e exames através de uma interface de navegação.
 
 
-1. Clone o repositório:
+1.Clone o repositório:
 git clone https://github.com/karenprojects/Easy-Tech-Mobile-Cloud-Computing.git
 cd Easy-Tech-Mobile-Cloud-Computing
 
